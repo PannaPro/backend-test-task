@@ -4,7 +4,7 @@ namespace App\Service\Purchase;
 
 use App\Model\PurchaseRequestDto;
 use App\Service\Exception\PaymentFailedException;
-use App\Service\OrderPricing\ProductPricingService;
+use App\Service\ProductPricing\ProductPricingService;
 use App\Service\Payment\PaymentGatewayResolver;
 
 final class PurchaseService

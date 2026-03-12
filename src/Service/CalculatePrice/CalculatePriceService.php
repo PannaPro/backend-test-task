@@ -3,7 +3,7 @@
 namespace App\Service\CalculatePrice;
 
 use App\Model\CalculatePriceRequestDto;
-use App\Service\OrderPricing\ProductPricingService;
+use App\Service\ProductPricing\ProductPricingService;
 
 final class CalculatePriceService
 {

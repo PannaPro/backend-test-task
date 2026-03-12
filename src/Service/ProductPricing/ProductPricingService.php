@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Service\OrderPricing;
+namespace App\Service\ProductPricing;
 
 use App\Repository\CouponRepository;
 use App\Repository\ProductRepository;
 use App\Service\CalculatePrice\PriceCalculator;
-use App\Service\OrderPricing\Dto\OrderPricingResult;
+use App\Service\ProductPricing\Dto\OrderPricingResult;
 use App\Service\TaxRuleProvider;
 
 final class ProductPricingService

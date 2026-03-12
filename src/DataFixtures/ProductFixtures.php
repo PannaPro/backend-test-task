@@ -16,7 +16,7 @@ class ProductFixtures extends Fixture
             ['name' => 'Case', 'price' => 1000],
         ];
 
-        $currency = 'EURO';
+        $currency = 'EUR';
 
         foreach ($products as $data) {
             $product = new Product();

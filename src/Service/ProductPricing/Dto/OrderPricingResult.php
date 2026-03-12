@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\OrderPricing\Dto;
+namespace App\Service\ProductPricing\Dto;
 
 use App\Entity\Coupon;
 use App\Entity\Product;
