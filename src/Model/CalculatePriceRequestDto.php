@@ -11,16 +11,31 @@ class CalculatePriceRequestDto
         #[Assert\NotNull]
         #[Assert\Type('integer')]
         #[Assert\Positive]
-        public ?int $product = null,
+        private ?int $product = null,
 
         #[Assert\NotBlank]
         #[Assert\Type('string')]
         #[ValidTaxNumber]
-        public ?string $taxNumber = null,
+        private ?string $taxNumber = null,
 
         #[Assert\Type('string')]
         #[Assert\NotBlank(allowNull: true)]
-        public ?string $couponCode = null,
+        private ?string $couponCode = null,
     ) {
+    }
+
+    public function getProduct(): ?int
+    {
+        return $this->product;
+    }
+
+    public function getTaxNumber(): ?string
+    {
+        return $this->taxNumber;
+    }
+
+    public function getCouponCode(): ?string
+    {
+        return $this->couponCode;
     }
 }

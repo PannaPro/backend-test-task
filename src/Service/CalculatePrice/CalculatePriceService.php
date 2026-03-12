@@ -24,14 +24,18 @@ final class CalculatePriceService
      */
     public function calculateProductPrice(CalculatePriceRequestDto $dto): array
     {
-        $pricing = $this->productPricingService->calculate($dto->product, $dto->taxNumber, $dto->couponCode);
+        $pricing = $this->productPricingService->calculate(
+            $dto->getProduct(),
+            $dto->getTaxNumber(),
+            $dto->getCouponCode(),
+        );
 
         return [
             'product' => [
                 'id' => $pricing->getProduct()->getId(),
                 'name' => $pricing->getProduct()->getName(),
             ],
-            'taxNumber' => $dto->taxNumber,
+            'taxNumber' => $pricing->getTaxNumber(),
             'taxRate' => $pricing->getPrice()->getTaxRate(),
             'couponCode' => $pricing->getCoupon()?->getCode(),
             'price' => $pricing->getPrice()->getFinalPrice(),

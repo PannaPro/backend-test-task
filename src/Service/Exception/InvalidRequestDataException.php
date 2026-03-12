@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Exception;
 
-final class InvalidRequestDataException extends DomainExternalException
+final class InvalidRequestDataException extends DomainValidationException
 {
     public function getTitle(): string
     {

@@ -20,10 +20,11 @@ final class ProductPricingService
 
     public function calculate(int $productId, string $taxNumber, ?string $couponCode): OrderPricingResult
     {
+        $normalizedTaxNumber = strtoupper(trim($taxNumber));
         $product = $this->productRepository->getByIdOrFail($productId);
-        $taxRate = $this->taxRuleProvider->getTaxRateByTaxNumber($taxNumber);
+        $taxRate = $this->taxRuleProvider->getTaxRateByTaxNumber($normalizedTaxNumber);
         $coupon = $couponCode !== null
-            ? $this->couponRepository->getByCodeOrFail(strtoupper($couponCode))
+            ? $this->couponRepository->getByCodeOrFail(strtoupper(trim($couponCode)))
             : null;
 
         $price = $this->priceCalculator->calculateFinalPrice($product->getPrice(), $taxRate, $coupon);
@@ -31,6 +32,7 @@ final class ProductPricingService
         return new OrderPricingResult(
             product: $product,
             coupon: $coupon,
+            taxNumber: $normalizedTaxNumber,
             price: $price,
         );
     }

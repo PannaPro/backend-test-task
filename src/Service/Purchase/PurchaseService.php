@@ -10,23 +10,28 @@ use App\Service\Payment\PaymentGatewayResolver;
 final class PurchaseService
 {
     public function __construct(
-        private readonly ProductPricingService  $orderPricingService,
+        private readonly ProductPricingService $orderPricingService,
         private readonly PaymentGatewayResolver $paymentGatewayResolver,
     ) {
     }
 
     public function purchase(PurchaseRequestDto $dto): void
     {
-        $pricing = $this->orderPricingService->calculate($dto->product, $dto->taxNumber, $dto->couponCode);
+        $pricing = $this->orderPricingService->calculate(
+            $dto->getProduct(),
+            $dto->getTaxNumber(),
+            $dto->getCouponCode(),
+        );
+
         if ($pricing->getPrice()->getFinalPriceInCents() === 0) {
             return;
         }
 
-        $paymentGateway = $this->paymentGatewayResolver->resolve($dto->paymentProcessor);
-        if (!$paymentGateway->canCharge($pricing->price->finalPriceInCents)) {
+        $paymentGateway = $this->paymentGatewayResolver->resolve($dto->getPaymentProcessor());
+        if (!$paymentGateway->canCharge($pricing->getPrice()->getFinalPriceInCents())) {
             throw PaymentFailedException::because('Final price is below or above the allowed amount for the selected payment processor.');
         }
 
-        $paymentGateway->charge($pricing->price->finalPriceInCents);
+        $paymentGateway->charge($pricing->getPrice()->getFinalPriceInCents());
     }
 }

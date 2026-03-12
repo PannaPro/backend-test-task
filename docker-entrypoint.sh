@@ -2,6 +2,11 @@
 
 set -e
 
+if [ ! -d vendor ]; then
+    echo 'Installing composer dependencies...'
+    composer install --no-interaction --prefer-dist
+fi
+
 echo 'Waiting for database to be ready...'
 
 ATTEMPTS_LEFT_TO_REACH_DATABASE=60

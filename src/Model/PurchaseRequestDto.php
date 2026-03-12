@@ -12,21 +12,41 @@ class PurchaseRequestDto
         #[Assert\NotNull]
         #[Assert\Type('integer')]
         #[Assert\Positive]
-        public ?int $product = null,
+        private ?int $product = null,
 
         #[Assert\NotBlank]
         #[Assert\Type('string')]
         #[ValidTaxNumber]
-        public ?string $taxNumber = null,
+        private ?string $taxNumber = null,
 
         #[Assert\Type('string')]
         #[Assert\NotBlank(allowNull: true)]
-        public ?string $couponCode = null,
+        private ?string $couponCode = null,
 
         #[Assert\NotBlank]
         #[Assert\Type('string')]
         #[Assert\Choice(callback: [PaymentGatewayType::class, 'values'])]
-        public ?string $paymentProcessor = null,
+        private ?string $paymentProcessor = null,
     ) {
+    }
+
+    public function getProduct(): ?int
+    {
+        return $this->product;
+    }
+
+    public function getTaxNumber(): ?string
+    {
+        return $this->taxNumber;
+    }
+
+    public function getCouponCode(): ?string
+    {
+        return $this->couponCode;
+    }
+
+    public function getPaymentProcessor(): ?string
+    {
+        return $this->paymentProcessor;
     }
 }

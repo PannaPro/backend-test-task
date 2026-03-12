@@ -40,6 +40,7 @@ final class ProductPricingServiceTest extends TestCase
         $result = $service->calculate(1, 'DE123456789', null);
 
         self::assertNull($result->getCoupon());
+        self::assertSame('DE123456789', $result->getTaxNumber());
         self::assertSame(11900, $result->getPrice()->getFinalPriceInCents());
         self::assertSame('119.00', $result->getPrice()->getFinalPrice());
         self::assertSame(19, $result->getPrice()->getTaxRate());
@@ -70,9 +71,10 @@ final class ProductPricingServiceTest extends TestCase
             ->with('D15')
             ->willReturn($coupon);
 
-        $result = $service->calculate(1, 'DE123456789', 'd15');
+        $result = $service->calculate(1, ' de123456789 ', ' d15 ');
 
         self::assertSame($coupon, $result->getCoupon());
+        self::assertSame('DE123456789', $result->getTaxNumber());
         self::assertSame(10115, $result->getPrice()->getFinalPriceInCents());
         self::assertSame('101.15', $result->getPrice()->getFinalPrice());
     }

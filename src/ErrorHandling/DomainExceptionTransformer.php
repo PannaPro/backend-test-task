@@ -54,7 +54,7 @@ class DomainExceptionTransformer implements ExceptionTransformerInterface
             $title = $exception->getTitle();
             $detail = $exception->getDetail();
         } elseif ($exception instanceof HttpExceptionInterface) {
-            $status = $exception->getStatusCode();
+            $status = self::mapDomainExceptionToStatusCode($exception);
             $title = HttpApiProblem::getTitleForStatusCode($status);
             $detail = $exception->getMessage();
         } else {

@@ -11,6 +11,7 @@ final readonly class OrderPricingResult
     public function __construct(
         public Product $product,
         public ?Coupon $coupon,
+        public string $taxNumber,
         public PriceCalculationResult $price,
     ) {
     }
@@ -23,6 +24,11 @@ final readonly class OrderPricingResult
     public function getCoupon(): ?Coupon
     {
         return $this->coupon;
+    }
+
+    public function getTaxNumber(): string
+    {
+        return $this->taxNumber;
     }
 
     public function getPrice(): PriceCalculationResult
