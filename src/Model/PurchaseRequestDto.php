@@ -2,10 +2,11 @@
 
 namespace App\Model;
 
+use App\Enum\PaymentGatewayType;
 use App\Validator\ValidTaxNumber;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class CalculatePriceRequestDto
+class PurchaseRequestDto
 {
     public function __construct(
         #[Assert\NotNull]
@@ -21,6 +22,11 @@ class CalculatePriceRequestDto
         #[Assert\Type('string')]
         #[Assert\NotBlank(allowNull: true)]
         public ?string $couponCode = null,
+
+        #[Assert\NotBlank]
+        #[Assert\Type('string')]
+        #[Assert\Choice(callback: [PaymentGatewayType::class, 'values'])]
+        public ?string $paymentProcessor = null,
     ) {
     }
 }

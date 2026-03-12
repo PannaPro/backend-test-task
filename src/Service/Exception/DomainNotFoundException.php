@@ -14,8 +14,8 @@ class DomainNotFoundException extends DomainException
         return "Entity does not exist";
     }
 
-    public static function notFound(): self
+    public static function notFound(string $detail = 'Not found'): self
     {
-        return new self("Not found");
+        return new self($detail);
     }
 }

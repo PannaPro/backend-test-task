@@ -9,8 +9,38 @@ final readonly class PriceCalculationResult
         public int $priceAfterDiscountsInCents,
         public int $taxAmountInCents,
         public int $finalPriceInCents,
-        public int $finalPrice,
+        public string $finalPrice,
         public int $taxRate,
     ) {
+    }
+
+    public function getBasePriceInCents(): int
+    {
+        return $this->basePriceInCents;
+    }
+
+    public function getPriceAfterDiscountsInCents(): int
+    {
+        return $this->priceAfterDiscountsInCents;
+    }
+
+    public function getTaxAmountInCents(): int
+    {
+        return $this->taxAmountInCents;
+    }
+
+    public function getFinalPriceInCents(): int
+    {
+        return $this->finalPriceInCents;
+    }
+
+    public function getFinalPrice(): string
+    {
+        return $this->finalPrice;
+    }
+
+    public function getTaxRate(): int
+    {
+        return $this->taxRate;
     }
 }

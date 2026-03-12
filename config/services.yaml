@@ -28,3 +28,17 @@ services:
             $debug: '%kernel.debug%'
         tags:
             - { name: 'phpro.api_problem.exception_transformer' }
+
+    Systemeio\TestForCandidates\PaymentProcessor\PaypalPaymentProcessor: ~
+
+    Systemeio\TestForCandidates\PaymentProcessor\StripePaymentProcessor: ~
+
+    App\Service\Payment\PaypalPaymentGateway:
+        tags: ['app.payment_gateway']
+
+    App\Service\Payment\StripePaymentGateway:
+        tags: ['app.payment_gateway']
+
+    App\Service\Payment\PaymentGatewayResolver:
+        arguments:
+            $paymentGateways: !tagged_iterator app.payment_gateway

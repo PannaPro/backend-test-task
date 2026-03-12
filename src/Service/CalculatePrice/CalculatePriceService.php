@@ -3,17 +3,12 @@
 namespace App\Service\CalculatePrice;
 
 use App\Model\CalculatePriceRequestDto;
-use App\Repository\CouponRepository;
-use App\Repository\ProductRepository;
-use App\Service\TaxRuleProvider;
+use App\Service\OrderPricing\ProductPricingService;
 
 final class CalculatePriceService
 {
     public function __construct(
-        private readonly ProductRepository $productRepository,
-        private readonly CouponRepository $couponRepository,
-        private readonly PriceCalculator $priceCalculator,
-        private readonly TaxRuleProvider $taxRuleProvider,
+        private readonly ProductPricingService $productPricingService,
     ) {
     }
 
@@ -29,24 +24,18 @@ final class CalculatePriceService
      */
     public function calculateProductPrice(CalculatePriceRequestDto $dto): array
     {
-        $product = $this->productRepository->getByIdOrFail($dto->productId);
-        $taxRate = $this->taxRuleProvider->getTaxRateByTaxNumber($dto->taxNumber);
-        $coupon = $dto->couponCode !== null
-            ? $this->couponRepository->getByCodeOrFail(strtoupper($dto->couponCode))
-            : null;
-
-        $price = $this->priceCalculator->calculateFinalPrice($product->getPrice(), $taxRate, $coupon);
+        $pricing = $this->productPricingService->calculate($dto->product, $dto->taxNumber, $dto->couponCode);
 
         return [
             'product' => [
-                'id' => $product->getId(),
-                'name' => $product->getName(),
+                'id' => $pricing->getProduct()->getId(),
+                'name' => $pricing->getProduct()->getName(),
             ],
             'taxNumber' => $dto->taxNumber,
-            'taxRate' => $price->taxRate,
-            'couponCode' => $coupon?->getCode(),
-            'price' => $price->finalPrice,
-            'currency' => $product->getCurrency(),
+            'taxRate' => $pricing->getPrice()->getTaxRate(),
+            'couponCode' => $pricing->getCoupon()?->getCode(),
+            'price' => $pricing->getPrice()->getFinalPrice(),
+            'currency' => $pricing->getProduct()->getCurrency(),
         ];
     }
 }

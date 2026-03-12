@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use App\Service\Exception\DomainNotFoundException;
+use App\Service\Exception\InvalidRequestDataException;
 
 final class TaxRuleProvider
 {
@@ -43,7 +43,7 @@ final class TaxRuleProvider
         $rule = $this->getRuleByTaxNumber($taxNumber);
 
         if ($rule === null) {
-            throw DomainNotFoundException::notFound('example: Unsupported tax number country prefix.');
+            throw InvalidRequestDataException::because('Unsupported tax number country prefix.');
         }
 
         return $rule['taxRate'];
