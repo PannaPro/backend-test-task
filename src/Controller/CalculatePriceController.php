@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Dto\CalculatePriceRequestDto;
-use App\Service\CalculatePriceService;
+use App\Model\CalculatePriceRequestDto;
+use App\Service\CalculatePrice\CalculatePriceService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,12 +18,12 @@ final class CalculatePriceController extends AbstractController
     }
 
     #[Route('/calculate-price', name: 'app_calculate_price', methods: ['POST'])]
-    public function index(
+    public function calculatePrice(
         #[MapRequestPayload] CalculatePriceRequestDto $requestDto,
     ): JsonResponse
     {
-        $data = $this->calculatePriceService->calculate($requestDto);
+        $data = $this->calculatePriceService->calculateProductPrice($requestDto);
 
-        return $this->json($data, Response::HTTP_CREATED);
+        return $this->json($data, Response::HTTP_OK);
     }
 }

@@ -2,19 +2,17 @@
 
 namespace App\Validator;
 
+use App\Service\TaxRuleProvider;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 final class ValidTaxNumberValidator extends ConstraintValidator
 {
-    /** TODO кеш будет хранить патерны (например ключ буквенныый префикс - значение % налоговой ставки) */
-    private const PATTERNS = [
-        'DE' => '/^DE\d{9}$/',
-        'IT' => '/^IT\d{11}$/',
-        'GR' => '/^GR\d{9}$/',
-        'FR' => '/^FR[A-Z]{2}\d{9}$/',
-    ];
+    public function __construct(
+        private readonly TaxRuleProvider $taxRuleProvider,
+    ) {
+    }
 
     public function validate(mixed $value, Constraint $constraint): void
     {
@@ -30,12 +28,8 @@ final class ValidTaxNumberValidator extends ConstraintValidator
             return;
         }
 
-        $value = mb_strtoupper(trim($value));
-
-        foreach (self::PATTERNS as $pattern) {
-            if (preg_match($pattern, $value) === 1) {
-                return;
-            }
+        if ($this->taxRuleProvider->isValidTaxNumber($value)) {
+            return;
         }
 
         $this->context

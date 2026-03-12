@@ -25,7 +25,7 @@ class DomainExceptionTransformer implements ExceptionTransformerInterface
     private const DEFAULT_DETAIL = 'Internal Server Error';
 
     private const STATUS_MAP = [
-        DomainNotFoundException::class => Response::HTTP_NOT_FOUND, // ресурс/сущность не найдены
+        DomainNotFoundException::class => Response::HTTP_BAD_REQUEST, // ресурс/сущность не найдены
         DomainConflictException::class => Response::HTTP_CONFLICT, // логический конфликт или дублирование
         DomainValidationException::class => Response::HTTP_UNPROCESSABLE_ENTITY, // не прошли бизнес-валидацию
         DomainConstraintViolationListException::class => Response::HTTP_UNPROCESSABLE_ENTITY,

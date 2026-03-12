@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Dto;
+namespace App\Model;
 
 use App\Validator\ValidTaxNumber;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -11,7 +11,7 @@ class CalculatePriceRequestDto
         #[Assert\NotNull]
         #[Assert\Type('integer')]
         #[Assert\Positive]
-        public ?int $product = null,
+        public ?int $productId = null,
 
         #[Assert\NotBlank]
         #[Assert\Type('string')]
