@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c9efbef7d2dabaac64a577c8f71dd276",
+    "content-hash": "7d7ec593a53b1d43289c8ed4bcdad0d9",
     "packages": [
         {
             "name": "doctrine/collections",
@@ -1118,6 +1118,109 @@
                 "source": "https://github.com/doctrine/sql-formatter/tree/1.5.4"
             },
             "time": "2026-02-08T16:21:46+00:00"
+        },
+        {
+            "name": "phpro/api-problem",
+            "version": "1.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpro/api-problem.git",
+                "reference": "c983ac10d30460563caa2d839faf0643e664c952"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpro/api-problem/zipball/c983ac10d30460563caa2d839faf0643e664c952",
+                "reference": "c983ac10d30460563caa2d839faf0643e664c952",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~8.3.0 || ~8.4.0 || ~8.5.0"
+            },
+            "require-dev": {
+                "php-cs-fixer/shim": "^3.88",
+                "phpro/grumphp-shim": "^2.17",
+                "phpspec/phpspec": "^7.2",
+                "sebastian/comparator": "^4.0",
+                "symfony/validator": "^5.4 || ^6.0 || ^7.0"
+            },
+            "suggest": {
+                "symfony/validator": "If you want to use the ValidationApiProblem"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Phpro\\ApiProblem\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Toon Verwerft",
+                    "email": "toon.verwerft@phpro.be"
+                }
+            ],
+            "description": "RFC7807 Problem details implementation",
+            "support": {
+                "issues": "https://github.com/phpro/api-problem/issues",
+                "source": "https://github.com/phpro/api-problem/tree/1.9.0"
+            },
+            "time": "2025-10-21T09:37:10+00:00"
+        },
+        {
+            "name": "phpro/api-problem-bundle",
+            "version": "1.12.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpro/api-problem-bundle.git",
+                "reference": "553655eec87f34b4a26f7bbd5f7d2dedbb1cc9cd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpro/api-problem-bundle/zipball/553655eec87f34b4a26f7bbd5f7d2dedbb1cc9cd",
+                "reference": "553655eec87f34b4a26f7bbd5f7d2dedbb1cc9cd",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~8.3.0 || ~8.4.0 || ~8.5.0",
+                "phpro/api-problem": "^1.0",
+                "symfony/dependency-injection": "^6.4 || ^7.4 || ^8.0",
+                "symfony/event-dispatcher": "^6.4 || ^7.4 || ^8.0",
+                "symfony/http-kernel": "^6.4 || ^7.4 || ^8.0"
+            },
+            "require-dev": {
+                "matthiasnoback/symfony-dependency-injection-test": "^6.2",
+                "php-cs-fixer/shim": "^3.94",
+                "phpro/grumphp-shim": "^2.19",
+                "phpspec/prophecy": "^1.25",
+                "phpspec/prophecy-phpunit": "^2.5",
+                "phpunit/phpunit": "^12.5",
+                "symfony/security-core": "^6.4 || ^7.4 || ^8.0"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "Phpro\\ApiProblemBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Toon Verwerft",
+                    "email": "toon.verwerft@phpro.be"
+                }
+            ],
+            "description": "RFC7807 Problem details integration for Symfony",
+            "support": {
+                "issues": "https://github.com/phpro/api-problem-bundle/issues",
+                "source": "https://github.com/phpro/api-problem-bundle/tree/1.12.1"
+            },
+            "time": "2026-02-13T07:50:23+00:00"
         },
         {
             "name": "psr/cache",
