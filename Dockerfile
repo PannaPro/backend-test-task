@@ -14,8 +14,13 @@ RUN adduser -u ${USER_ID} -D -H app
 USER app
 
 COPY --chown=app . /app
+
 WORKDIR /app
 
+COPY --chmod=755 docker-entrypoint.sh /usr/local/bin/docker-entrypoint
+
 EXPOSE 8337
+
+ENTRYPOINT [ "docker-entrypoint" ]
 
 CMD ["php", "-S", "0.0.0.0:8337", "-t", "public"]
