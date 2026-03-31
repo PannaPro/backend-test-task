@@ -58,7 +58,7 @@ readonly class ResponseSubscriber implements EventSubscriberInterface
     private function getStatusCode(Request $request): int
     {
         return match ($request->getMethod()) {
-            'POST' => Response::HTTP_CREATED,
+//            'POST' => Response::HTTP_CREATED, // need return 200
             'DELETE' => Response::HTTP_NO_CONTENT,
             default => Response::HTTP_OK,
         };
