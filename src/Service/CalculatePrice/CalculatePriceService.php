@@ -33,7 +33,6 @@ final class CalculatePriceService
                 'taxRate' => $pricing->getPrice()->getTaxRate(),
                 'couponCode' => $pricing->getCoupon()?->getCode(),
                 'price' => $pricing->getPrice()->getFinalPrice(),
-                'currency' => $pricing->getProduct()->getCurrency(),
             ]
         );
     }

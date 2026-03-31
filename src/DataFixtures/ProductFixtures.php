@@ -16,14 +16,10 @@ class ProductFixtures extends Fixture
             ['name' => 'Case', 'price' => 1000],
         ];
 
-        $currency = 'EUR';
-
         foreach ($products as $data) {
             $product = new Product();
             $product->setName($data['name']);
             $product->setPrice($data['price']);
-            $product->setCurrency($currency);
-
             $manager->persist($product);
         }
 

@@ -16,21 +16,21 @@ class Coupon
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $code = null;
+    #[ORM\Column(length: 255, unique: true)]
+    private string $code;
 
     #[ORM\Column(length: 255, enumType: CouponType::class)]
-    private ?CouponType $type = null;
+    private CouponType $type;
 
     #[ORM\Column]
-    private ?int $value = null;
+    private int $value;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getCode(): ?string
+    public function getCode(): string
     {
         return $this->code;
     }
@@ -42,7 +42,7 @@ class Coupon
         return $this;
     }
 
-    public function getType(): ?CouponType
+    public function getType(): CouponType
     {
         return $this->type;
     }
@@ -54,7 +54,7 @@ class Coupon
         return $this;
     }
 
-    public function getValue(): ?int
+    public function getValue(): int
     {
         return $this->value;
     }

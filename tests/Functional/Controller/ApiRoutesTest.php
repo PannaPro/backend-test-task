@@ -47,7 +47,6 @@ final class ApiRoutesTest extends KernelTestCase
                     'taxRate' => 19,
                     'couponCode' => null,
                     'price' => '119.00',
-                    'currency' => 'EUR',
                 ],
             ], JSON_THROW_ON_ERROR),
             (string) $response->getContent(),
@@ -96,7 +95,6 @@ final class ApiRoutesTest extends KernelTestCase
         $product = new Product();
         $product->setName('Test product');
         $product->setPrice($priceInCents);
-        $product->setCurrency('EUR');
 
         return $product;
     }

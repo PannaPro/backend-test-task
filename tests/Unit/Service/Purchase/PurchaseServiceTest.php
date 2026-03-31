@@ -89,7 +89,6 @@ final class PurchaseServiceTest extends TestCase
         $product = new Product();
         $product->setName('Test product');
         $product->setPrice($priceInCents);
-        $product->setCurrency('EUR');
 
         return $product;
     }
