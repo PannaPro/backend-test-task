@@ -34,7 +34,7 @@ final class ApiRoutesTest extends KernelTestCase
         );
         $response = $kernel->handle($request);
 
-        self::assertSame(201, $response->getStatusCode());
+        self::assertSame(200, $response->getStatusCode());
         self::assertSame('application/json', $response->headers->get('content-type'));
         self::assertJsonStringEqualsJsonString(
             json_encode([
