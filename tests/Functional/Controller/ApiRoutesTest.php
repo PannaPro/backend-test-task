@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Functional\Controller;
 
 use App\Entity\Product;
-use App\Repository\CouponRepository;
-use App\Repository\ProductRepository;
-use App\Service\CalculatePrice\PriceCalculator;
-use App\Service\ProductPricing\ProductPricingService;
-use App\Service\TaxRuleProvider;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -17,25 +17,10 @@ final class ApiRoutesTest extends KernelTestCase
     {
         self::bootKernel();
         $kernel = self::$kernel;
-
         $container = static::getContainer();
 
-        $productRepository = $this->createMock(ProductRepository::class);
-        $couponRepository = $this->createMock(CouponRepository::class);
-        $productRepository
-            ->method('getByIdOrFail')
-            ->with(1)
-            ->willReturn($this->createProduct(10000));
-        $couponRepository
-            ->expects(self::never())
-            ->method('getByCodeOrFail');
-
-        $container->set(ProductPricingService::class, new ProductPricingService(
-            $productRepository,
-            $couponRepository,
-            new TaxRuleProvider(),
-            new PriceCalculator(),
-        ));
+        $product = $this->createProduct(10000);
+        $container->set(EntityManagerInterface::class, $this->mockEntityManager(1, $product));
 
         $request = Request::create(
             '/calculate-price',
@@ -49,19 +34,21 @@ final class ApiRoutesTest extends KernelTestCase
         );
         $response = $kernel->handle($request);
 
-        self::assertSame(200, $response->getStatusCode());
+        self::assertSame(201, $response->getStatusCode());
         self::assertSame('application/json', $response->headers->get('content-type'));
         self::assertJsonStringEqualsJsonString(
             json_encode([
-                'product' => [
-                    'id' => null,
-                    'name' => 'Test product',
+                'data' => [
+                    'product' => [
+                        'id' => null,
+                        'name' => 'Test product',
+                    ],
+                    'taxNumber' => 'DE123456789',
+                    'taxRate' => 19,
+                    'couponCode' => null,
+                    'price' => '119.00',
+                    'currency' => 'EUR',
                 ],
-                'taxNumber' => 'DE123456789',
-                'taxRate' => 19,
-                'couponCode' => null,
-                'price' => '119.00',
-                'currency' => 'EUR',
             ], JSON_THROW_ON_ERROR),
             (string) $response->getContent(),
         );
@@ -71,6 +58,9 @@ final class ApiRoutesTest extends KernelTestCase
     {
         self::bootKernel();
         $kernel = self::$kernel;
+        $container = static::getContainer();
+
+        $container->set(EntityManagerInterface::class, $this->mockEntityManager(1, $this->createProduct(5000)));
 
         $request = Request::create(
             '/purchase',
@@ -87,6 +77,18 @@ final class ApiRoutesTest extends KernelTestCase
 
         self::assertSame(400, $response->getStatusCode());
         self::assertSame('application/problem+json', $response->headers->get('content-type'));
+    }
+
+    private function mockEntityManager(int $productId, ?Product $product): EntityManagerInterface
+    {
+        $repository = $this->createMock(EntityRepository::class);
+        $repository->method('find')->with($productId)->willReturn($product);
+
+        $em = $this->createMock(EntityManagerInterface::class);
+        $em->method('getClassMetadata')->willReturn($this->createMock(ClassMetadata::class));
+        $em->method('getRepository')->willReturn($repository);
+
+        return $em;
     }
 
     private function createProduct(int $priceInCents): Product

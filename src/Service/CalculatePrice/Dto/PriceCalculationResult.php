@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service\CalculatePrice\Dto;
 
 final readonly class PriceCalculationResult

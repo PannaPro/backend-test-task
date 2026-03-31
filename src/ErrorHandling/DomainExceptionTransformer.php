@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\ErrorHandling;
 
 use App\Service\Exception\ConstraintViolation\SymfonyViolationAdapter;
@@ -18,7 +20,7 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 use Throwable;
 
-class DomainExceptionTransformer implements ExceptionTransformerInterface
+final class DomainExceptionTransformer implements ExceptionTransformerInterface
 {
     private const DEFAULT_TITLE = 'An error occurred';
 
@@ -34,8 +36,8 @@ class DomainExceptionTransformer implements ExceptionTransformerInterface
     ];
 
     public function __construct(
-        readonly private RequestStack $requestStack,
-        readonly private bool $debug,
+        private readonly RequestStack $requestStack,
+        private readonly bool $debug,
     ) {
     }
 

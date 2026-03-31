@@ -1,43 +1,37 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Service\ProductPricing;
 
 use App\Entity\Coupon;
 use App\Entity\Product;
 use App\Enum\CouponType;
 use App\Service\CalculatePrice\PriceCalculator;
-use App\Service\Exception\DomainNotFoundException;
 use App\Service\Exception\InvalidRequestDataException;
 use App\Service\ProductPricing\ProductPricingService;
 use App\Service\TaxRuleProvider;
-use App\Repository\CouponRepository;
-use App\Repository\ProductRepository;
 use PHPUnit\Framework\TestCase;
 
 final class ProductPricingServiceTest extends TestCase
 {
-    public function testCalculatesPriceWithoutCoupon(): void
+    private ProductPricingService $service;
+
+    protected function setUp(): void
     {
-        $productRepository = $this->createMock(ProductRepository::class);
-        $couponRepository = $this->createMock(CouponRepository::class);
-        $service = new ProductPricingService(
-            $productRepository,
-            $couponRepository,
+        $this->service = new ProductPricingService(
             new TaxRuleProvider(),
             new PriceCalculator(),
         );
+    }
 
-        $productRepository
-            ->expects(self::once())
-            ->method('getByIdOrFail')
-            ->with(1)
-            ->willReturn($this->createProduct(10000));
-
-        $couponRepository
-            ->expects(self::never())
-            ->method('getByCodeOrFail');
-
-        $result = $service->calculate(1, 'DE123456789', null);
+    public function testCalculatesPriceWithoutCoupon(): void
+    {
+        $result = $this->service->calculate(
+            $this->createProduct(10000),
+            'DE123456789',
+            null,
+        );
 
         self::assertNull($result->getCoupon());
         self::assertSame('DE123456789', $result->getTaxNumber());
@@ -46,32 +40,15 @@ final class ProductPricingServiceTest extends TestCase
         self::assertSame(19, $result->getPrice()->getTaxRate());
     }
 
-    public function testCalculatesPriceWithCouponAndNormalizesCouponCode(): void
+    public function testCalculatesPriceWithCoupon(): void
     {
-        $productRepository = $this->createMock(ProductRepository::class);
-        $couponRepository = $this->createMock(CouponRepository::class);
-        $service = new ProductPricingService(
-            $productRepository,
-            $couponRepository,
-            new TaxRuleProvider(),
-            new PriceCalculator(),
-        );
-
         $coupon = $this->createCoupon(CouponType::PERCENTAGE_OF_PURCHASE, 15, 'D15');
 
-        $productRepository
-            ->expects(self::once())
-            ->method('getByIdOrFail')
-            ->with(1)
-            ->willReturn($this->createProduct(10000));
-
-        $couponRepository
-            ->expects(self::once())
-            ->method('getByCodeOrFail')
-            ->with('D15')
-            ->willReturn($coupon);
-
-        $result = $service->calculate(1, ' de123456789 ', ' d15 ');
+        $result = $this->service->calculate(
+            $this->createProduct(10000),
+            'DE123456789',
+            $coupon,
+        );
 
         self::assertSame($coupon, $result->getCoupon());
         self::assertSame('DE123456789', $result->getTaxNumber());
@@ -79,49 +56,16 @@ final class ProductPricingServiceTest extends TestCase
         self::assertSame('101.15', $result->getPrice()->getFinalPrice());
     }
 
-    public function testProductNotFoundException(): void
-    {
-        $productRepository = $this->createMock(ProductRepository::class);
-        $couponRepository = $this->createMock(CouponRepository::class);
-        $service = new ProductPricingService(
-            $productRepository,
-            $couponRepository,
-            new TaxRuleProvider(),
-            new PriceCalculator(),
-        );
-
-        $productRepository
-            ->expects(self::once())
-            ->method('getByIdOrFail')
-            ->with(1)
-            ->willThrowException(DomainNotFoundException::notFound());
-
-        $this->expectException(DomainNotFoundException::class);
-
-        $service->calculate(1, 'DE123456789', null);
-    }
-
     public function testThrowsExceptionForUnsupportedTaxNumberPrefix(): void
     {
-        $productRepository = $this->createMock(ProductRepository::class);
-        $couponRepository = $this->createMock(CouponRepository::class);
-        $service = new ProductPricingService(
-            $productRepository,
-            $couponRepository,
-            new TaxRuleProvider(),
-            new PriceCalculator(),
-        );
-
-        $productRepository
-            ->expects(self::once())
-            ->method('getByIdOrFail')
-            ->with(1)
-            ->willReturn($this->createProduct(10000));
-
         $this->expectException(InvalidRequestDataException::class);
         $this->expectExceptionMessage('Unsupported tax number country prefix.');
 
-        $service->calculate(1, 'ES123456789', null);
+        $this->service->calculate(
+            $this->createProduct(10000),
+            'ES123456789',
+            null,
+        );
     }
 
     private function createProduct(int $priceInCents): Product

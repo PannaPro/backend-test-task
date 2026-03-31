@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
 use App\Service\Exception\InvalidRequestDataException;
@@ -50,6 +52,7 @@ final class TaxRuleProvider
     }
 
     /**
+     * @param string $taxNumber
      * @return array{pattern: string, taxRate: int}|null
      */
     private function getRuleByTaxNumber(string $taxNumber): ?array

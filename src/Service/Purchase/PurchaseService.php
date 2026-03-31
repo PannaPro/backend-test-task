@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service\Purchase;
 
 use App\Model\PurchaseRequestDto;
+use App\ResponseHandling\ResponseCollection\ResponseCollection;
 use App\Service\Exception\PaymentFailedException;
-use App\Service\ProductPricing\ProductPricingService;
 use App\Service\Payment\PaymentGatewayResolver;
+use App\Service\ProductPricing\ProductPricingService;
 
 final class PurchaseService
 {
@@ -15,16 +18,16 @@ final class PurchaseService
     ) {
     }
 
-    public function purchase(PurchaseRequestDto $dto): void
+    public function purchase(PurchaseRequestDto $dto): ResponseCollection
     {
         $pricing = $this->orderPricingService->calculate(
             $dto->getProduct(),
             $dto->getTaxNumber(),
-            $dto->getCouponCode(),
+            $dto->getCoupon(),
         );
 
         if ($pricing->getPrice()->getFinalPriceInCents() === 0) {
-            return;
+            return new ResponseCollection(['status' => 'ok']);
         }
 
         $paymentGateway = $this->paymentGatewayResolver->resolve($dto->getPaymentProcessor());
@@ -33,5 +36,7 @@ final class PurchaseService
         }
 
         $paymentGateway->charge($pricing->getPrice()->getFinalPriceInCents());
+
+        return new ResponseCollection(['status' => 'ok']);
     }
 }

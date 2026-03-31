@@ -1,36 +1,42 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Model;
 
+use App\Entity\Coupon;
+use App\Entity\Product;
 use App\Enum\PaymentGatewayType;
+use App\Validator\ValidCouponCode;
 use App\Validator\ValidTaxNumber;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class PurchaseRequestDto
+final class PurchaseRequestDto
 {
+    private ?Coupon $coupon = null;
+
     public function __construct(
-        #[Assert\NotNull]
-        #[Assert\Type('integer')]
-        #[Assert\Positive]
-        private ?int $product = null,
+        #[Assert\NotNull(message: 'Product not found.')]
+        private readonly ?Product $product = null,
 
         #[Assert\NotBlank]
         #[Assert\Type('string')]
         #[ValidTaxNumber]
-        private ?string $taxNumber = null,
+        private readonly ?string $taxNumber = null,
 
         #[Assert\Type('string')]
         #[Assert\NotBlank(allowNull: true)]
-        private ?string $couponCode = null,
+        #[ValidCouponCode]
+        private readonly ?string $couponCode = null,
 
         #[Assert\NotBlank]
         #[Assert\Type('string')]
         #[Assert\Choice(callback: [PaymentGatewayType::class, 'values'])]
-        private ?string $paymentProcessor = null,
+        private readonly ?string $paymentProcessor = null,
     ) {
     }
 
-    public function getProduct(): ?int
+    public function getProduct(): ?Product
     {
         return $this->product;
     }
@@ -40,9 +46,14 @@ class PurchaseRequestDto
         return $this->taxNumber;
     }
 
-    public function getCouponCode(): ?string
+    public function getCoupon(): ?Coupon
     {
-        return $this->couponCode;
+        return $this->coupon;
+    }
+
+    public function setCoupon(Coupon $coupon): void
+    {
+        $this->coupon = $coupon;
     }
 
     public function getPaymentProcessor(): ?string

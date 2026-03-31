@@ -7,7 +7,7 @@ namespace App\Validator;
 use Symfony\Component\Validator\Constraint;
 
 #[\Attribute]
-final class ValidTaxNumber extends Constraint
+final class ValidCouponCode extends Constraint
 {
-    public string $message = 'Invalid tax number format.';
+    public string $message = 'Coupon "{{ code }}" not found.';
 }

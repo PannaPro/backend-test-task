@@ -1,7 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service\ProductPricing;
 
+use App\Entity\Coupon;
+use App\Entity\Product;
 use App\Repository\CouponRepository;
 use App\Repository\ProductRepository;
 use App\Service\CalculatePrice\PriceCalculator;
@@ -11,28 +15,20 @@ use App\Service\TaxRuleProvider;
 final class ProductPricingService
 {
     public function __construct(
-        private readonly ProductRepository $productRepository,
-        private readonly CouponRepository $couponRepository,
         private readonly TaxRuleProvider $taxRuleProvider,
         private readonly PriceCalculator $priceCalculator,
     ) {
     }
 
-    public function calculate(int $productId, string $taxNumber, ?string $couponCode): OrderPricingResult
+    public function calculate(Product $product, string $taxNumber, ?Coupon $coupon): OrderPricingResult
     {
-        $normalizedTaxNumber = strtoupper(trim($taxNumber));
-        $product = $this->productRepository->getByIdOrFail($productId);
-        $taxRate = $this->taxRuleProvider->getTaxRateByTaxNumber($normalizedTaxNumber);
-        $coupon = $couponCode !== null
-            ? $this->couponRepository->getByCodeOrFail(strtoupper(trim($couponCode)))
-            : null;
-
+        $taxRate = $this->taxRuleProvider->getTaxRateByTaxNumber($taxNumber);
         $price = $this->priceCalculator->calculateFinalPrice($product->getPrice(), $taxRate, $coupon);
 
         return new OrderPricingResult(
             product: $product,
             coupon: $coupon,
-            taxNumber: $normalizedTaxNumber,
+            taxNumber: $taxNumber,
             price: $price,
         );
     }

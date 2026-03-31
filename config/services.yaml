@@ -42,3 +42,7 @@ services:
     App\Service\Payment\PaymentGatewayResolver:
         arguments:
             $paymentGateways: !tagged_iterator app.payment_gateway
+
+    App\Serializer\EntityDenormalizer:
+        tags:
+            - { name: 'serializer.normalizer', priority: 10 }

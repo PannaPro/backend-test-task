@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Model\PurchaseRequestDto;
+use App\ResponseHandling\ResponseCollection\ResponseCollectionInterface;
 use App\Service\Purchase\PurchaseService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,10 +23,8 @@ final class PurchaseController extends AbstractController
     #[Route('/purchase', name: 'app_purchase', methods: ['POST'])]
     public function purchase(
         #[MapRequestPayload] PurchaseRequestDto $requestDto,
-    ): JsonResponse
+    ): ResponseCollectionInterface
     {
-        $this->purchaseService->purchase($requestDto);
-
-        return $this->json(['status' => 'ok'], Response::HTTP_OK);
+        return $this->purchaseService->purchase($requestDto);
     }
 }
